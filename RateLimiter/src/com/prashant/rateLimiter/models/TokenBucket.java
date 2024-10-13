@@ -18,10 +18,16 @@ public class TokenBucket {
 	public void refill() {
 		long current = System.nanoTime();
 		long elapsedTime = current - this.lastRefillTimeStamp;
-		// refill rate is in token/minute
+		
+		// Calculate how many tokens to add based on elapsed time (in minutes)
 		long tokenToAdd = (elapsedTime / 60_000_000_000L) * this.refillRate;
-		this.token = Math.min(this.capacity, this.token + tokenToAdd);
-		this.lastRefillTimeStamp = current;
+		
+		if(tokenToAdd > 0) {
+			// Add tokens to the bucket, ensuring it doesn't exceed capacity
+			this.token = Math.min(this.capacity, this.token + tokenToAdd);
+			// Only update the last refill timestamp if tokens were actually added
+			this.lastRefillTimeStamp = current;
+		}
 	}
 
 	public synchronized boolean consume() {
