@@ -18,7 +18,7 @@ public class TokenBucket {
 	public void refill() {
 		long current = System.nanoTime();
 		long elapsedTime = current - this.lastRefillTimeStamp;
-
+		// refill rate is in token/minute
 		long tokenToAdd = (elapsedTime / 60_000_000_000L) * this.refillRate;
 		this.token = Math.min(this.capacity, this.token + tokenToAdd);
 		this.lastRefillTimeStamp = current;
